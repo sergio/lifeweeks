@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <style type="text/css">
+    #canvas {
+      background-color: #fff;
+      position: absolute;
+    }
+
+  </style>
+  <script type="text/javascript" src="/moment.min.js"></script>
+  <script type="text/javascript">
+    function setCanvas() {
+
+      var canvasNode = document.getElementById('canvas');
+
+      var pw = canvasNode.parentNode.clientWidth;
+      var ph = canvasNode.parentNode.clientHeight;
+
+      canvasNode.height = pw * (canvasNode.height / canvasNode.width);
+      //canvasNode.width = pw;
+      //canvasNode.style.top = (ph - canvasNode.height) / 2 + "px";
+      canvasNode.style.left = (pw - canvasNode.width) / 2 + "px";
+
+      draw();
+    }
+    window.onresize = setCanvas;
+    setCanvas();
+  </script>
+  <script type="application/javascript">
+    function draw() {
+
+      var now = moment()
+      var weekdate = moment("19770110", "YYYYMMDD");
+
+      var canvas = document.getElementById("canvas");
+      if (canvas.getContext) {
+        var ctx = canvas.getContext("2d");
+
+        ctx.fillStyle = "rgb(120,70,70)";
+        ctx.strokeStyle = "rgb(200,200,200)";
+        ctx.lineWidth = 1.0;
+
+        var chartarea_top = 20;
+        var chartarea_left = 20;
+
+        var rectwidth = 10;
+        var margin = 2;
+
+        ctx.font = "8px sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        for(var week = 0; week < 52; week++)
+        {
+          ctx.fillText(week + 1, chartarea_left + week * (rectwidth + margin) + (rectwidth / 2.0), 0);
+        }
+
+        ctx.textAlign = "left";
+        for(var year = 0; year < 90; year++)
+        {
+          ctx.fillText(year, 0, chartarea_top + year * (rectwidth + margin));
+          for(var week = 0; week < 52; week++)
+          {
+            weekdate.add(1, 'weeks');
+            if(now > weekdate) {
+              ctx.fillRect (chartarea_left + week * (rectwidth + margin), chartarea_top + year * (rectwidth + margin), rectwidth, rectwidth);
+            }
+            else
+            {
+             ctx.strokeRect (chartarea_left + week * (rectwidth + margin) + 0.5, chartarea_top + year * (rectwidth + margin) + 0.5, rectwidth - 0.5, rectwidth - 0.5);
+            }
+          }
+        }
+      }
+    }
+  </script>
+ </head>
+ <body onload="setCanvas();">
+   <canvas id="canvas" width="650" height="1110"></canvas>
+ </body>
+</html>
